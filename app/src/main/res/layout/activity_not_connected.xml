@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/text_failure"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="40dp"
+        android:text="Sorry, we failed to connect\n to your device."
+        android:gravity = "center"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <Button
+        android:gravity="center"
+        android:layout_marginLeft="100dp"
+        android:layout_marginRight="100dp"
+        android:layout_marginTop="60dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Retry"
+        android:id="@+id/butto2n"
+        android:onClick="retry"/>
+
+    <Button
+        android:gravity="center"
+        android:layout_marginLeft="100dp"
+        android:layout_marginRight="100dp"
+        android:layout_marginTop="60dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Try connecting to a different device"
+        android:id="@+id/button2"
+        android:onClick="rescan"/>
+
+    <Button
+        android:gravity="center"
+        android:layout_marginLeft="100dp"
+        android:layout_marginRight="100dp"
+        android:layout_marginTop="60dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Reset bluetooth"
+        android:id="@+id/button3"
+        android:onClick="reset"/>
+
+
+</LinearLayout>

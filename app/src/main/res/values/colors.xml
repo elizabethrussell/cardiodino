@@ -1,0 +1,21 @@
+<resources>
+
+    <color name="black_overlay">#66000000</color>
+
+    <color name="transparent">#80000000 </color>
+    <color name="translucent">#88676767</color>
+    <color name="white">#ffffff</color>
+
+    <color name="primary_text">#676767</color>
+
+    <!--<color name="primary_blue">#009688</color>-->
+    <!--<color name="secondary_blue">#004D40</color>-->;;;
+    <color name="primary_blue">#8BC34A</color>
+    <color name="secondary_blue">#33691E</color>
+    <color name="accent1">#FFC400</color>
+    <color name="accent2">#304FFE</color>
+
+    <color name="button_text">@color/accent1</color>
+
+
+</resources>
