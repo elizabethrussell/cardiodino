@@ -252,10 +252,6 @@ public class BluetoothScan extends Activity {
 
         // Move on
         final Intent intent = new Intent(this, BluetoothAfterScan.class);
-        intent.putExtra(BluetoothAfterScan.EXTRAS_DEVICE_NAME,
-                device.getName());
-        intent.putExtra(BluetoothAfterScan.EXTRAS_DEVICE_ADDRESS,
-                device.getAddress());
 
         if (mScanning) {
             stopScan();

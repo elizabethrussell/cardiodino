@@ -19,7 +19,6 @@ public class AppClass extends Application implements DaggerInjector {
 
     public static SharedPreferences sp;
     public static String uid;
-    //public static Bus bus;
 
     private ObjectGraph objectGraph;
 
@@ -31,9 +30,6 @@ public class AppClass extends Application implements DaggerInjector {
         uid = ('h' + Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID));
 
         objectGraph = ObjectGraph.create(getModules().toArray());
-        //bus = new Bus(ThreadEnforcer.ANY);
-
-
     }
 
     List<Object> getModules() {

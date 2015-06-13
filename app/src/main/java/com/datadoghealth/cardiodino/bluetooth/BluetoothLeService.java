@@ -41,6 +41,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.datadoghealth.cardiodino.core.UniBus;
+import com.datadoghealth.cardiodino.util.HR;
 import com.datadoghealth.cardiodino.util.SharedPrefs;
 import com.squareup.otto.Subscribe;
 
@@ -72,43 +73,9 @@ public class BluetoothLeService extends Service {
 	public final static UUID UUID_HEART_RATE_MEASUREMENT = UUID
 			.fromString(GattAttributes.HEART_RATE_MEASUREMENT);
 
-	//connection state variable - handling for bluetooth drops - - - - - - CAN WE REMOVE PARTS of BELOW FROM AFTERSCAN?
-	private boolean BLE_CONNECTED;
-	public boolean BLE_DROPPED;
 	private Timer mTimer;
-	private bluetoothTimerTask mTimerTask;
-	private long lastBeatTime;
 	private BluetoothGattCharacteristic mNotifyCharacteristic;
 
-	private class bluetoothTimerTask extends TimerTask {
-		@Override
-		public void run() {
-			long timeSinceLastBeat = System.currentTimeMillis()-lastBeatTime;
-
-			long delayThreshold = 5000; //if no beat occurs in 5 seconds
-			if (timeSinceLastBeat>delayThreshold){
-				BLE_CONNECTED = false;
-				BLE_DROPPED = true;
-				stopTimer();
-
-				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(BluetoothLeService.this);
-				boolean ble_drop_vibrate = prefs.getBoolean("bledrop_pref", false);
-//                do this if dropped - start checking for connection?
-				if (ble_drop_vibrate) {
-					Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-					long[] pattern = {100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100};
-					v.vibrate(pattern, -1);
-					Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-					MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(), notification);
-					mediaPlayer.start();
-				}
-				Log.i(TAG, "STARTING BLUETOOTH CONNECT ATTEMPT");
-				String address = prefs.getString(SharedPrefs.BLUETOOTH_DEVICE_ADDRESS, "");
-				final boolean result = connect(address);
-				Log.i(TAG, "Connection result: " + Boolean.toString(result));
-			}
-		}
-	}
 
 	@Subscribe
 	public void getUpdates(String s) {
@@ -155,26 +122,6 @@ public class BluetoothLeService extends Service {
 		}
 	}
 
-	public void startTimer(){
-		if (mTimer != null){
-			Log.i(TAG, "mTimer is not null");
-			return;
-		} else {
-			mTimer = new Timer();
-			Log.i(TAG, "Starting mTimer");
-		}
-		mTimerTask = new bluetoothTimerTask();
-		mTimer.scheduleAtFixedRate(mTimerTask,0,2000);
-
-	}
-	public void stopTimer(){
-
-		mTimer.cancel();
-		mTimerTask.cancel();
-		mTimer = null;
-		mTimerTask = null;
-	}
-	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - CAN WE REMOVE ABOVE FROM AFTERSCAN??
 
 	// Implements callback methods for GATT events that the app cares about. For
 	// example,
@@ -234,28 +181,14 @@ public class BluetoothLeService extends Service {
 			}
 			int hr = characteristic.getIntValue(format, 1);
 
+			Log.i("HR measurement", String.valueOf(UniBus.get() == null));
+
 			// Post heart measurement
-			UniBus.get().post(hr);
+			UniBus.get().post(new HR(hr));
 		}
 		// otherwise, different type of gatt profile.  we may handle for this in future.
 
 
-		// Check for beats
-		if (!BLE_CONNECTED) {
-			startTimer();
-			BLE_CONNECTED = true;
-			BLE_DROPPED = false;
-			lastBeatTime = System.currentTimeMillis();
-		} else {
-			lastBeatTime = System.currentTimeMillis();
-		}
-	}
-
-
-	@Override
-	public void onCreate() {
-		BLE_CONNECTED = false;
-		super.onCreate();
 	}
 
 
@@ -314,10 +247,7 @@ public class BluetoothLeService extends Service {
 		}
 		Log.i(TAG, "Bluetooth adaptor initialized");
 
-
 		UniBus.get().register(this);
-
-
 
 		return true;
 	}
@@ -455,16 +385,4 @@ public class BluetoothLeService extends Service {
 	}
 
 
-	@Override
-	public int onStartCommand(Intent intent, int flags, int startId) {
-		return super.onStartCommand(intent, flags, startId);
-	}
-
-	@Override
-	public void onDestroy() {
-
-		stopTimer();
-		super.onDestroy();
-
-	}
 }

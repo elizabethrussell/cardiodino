@@ -5,3 +5,17 @@
 .DS_Store
 /build
 /captures
+
+*.iml
+
+.idea/modules.xml
+
+.idea/.name
+
+.idea/vcs.xml
+
+app/app.iml
+
+.idea/.name
+
+CardioDino.iml

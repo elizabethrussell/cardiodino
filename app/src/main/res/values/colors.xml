@@ -8,12 +8,11 @@
 
     <color name="primary_text">#676767</color>
 
-    <!--<color name="primary_blue">#009688</color>-->
-    <!--<color name="secondary_blue">#004D40</color>-->;;;
-    <color name="primary_blue">#8BC34A</color>
-    <color name="secondary_blue">#33691E</color>
-    <color name="accent1">#FFC400</color>
-    <color name="accent2">#304FFE</color>
+
+    <color name="primary">#1A237E</color>
+    <color name="secondary">#303F9F</color>
+    <color name="accent1">#64DD17</color>
+    <color name="accent2">#C6FF00</color>
 
     <color name="button_text">@color/accent1</color>
 

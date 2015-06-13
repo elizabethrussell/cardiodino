@@ -5,6 +5,7 @@ import java.util.List;
 import com.datadoghealth.cardiodino.AStart;
 import com.datadoghealth.cardiodino.R;
 import com.datadoghealth.cardiodino.core.UniBus;
+import com.datadoghealth.cardiodino.util.HR;
 import com.datadoghealth.cardiodino.util.SharedPrefs;
 import com.squareup.otto.Subscribe;
 
@@ -95,11 +96,7 @@ public class BluetoothAfterScan extends Activity {
     }
 
     @Subscribe
-    public void onHrReceived(int hr) {
-        exit();
-    }
-
-
+    public void onHrReceived(HR hr) { Log.i("recvd","hr"); exit();}
 
 
     @Override
