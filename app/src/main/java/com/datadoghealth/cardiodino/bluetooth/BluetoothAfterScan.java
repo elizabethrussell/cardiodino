@@ -96,7 +96,7 @@ public class BluetoothAfterScan extends Activity {
     }
 
     @Subscribe
-    public void onHrReceived(HR hr) { Log.i("recvd","hr"); exit();}
+    public void onHrReceived(HR hr) { exit();}
 
 
     @Override

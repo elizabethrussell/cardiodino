@@ -9,9 +9,9 @@
     <color name="primary_text">#676767</color>
 
 
-    <color name="primary">#1A237E</color>
+    <color name="primary">#00003D</color>
     <color name="secondary">#303F9F</color>
-    <color name="accent1">#64DD17</color>
+    <color name="accent1">#D11963</color>
     <color name="accent2">#C6FF00</color>
 
     <color name="button_text">@color/accent1</color>

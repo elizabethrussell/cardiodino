@@ -167,7 +167,6 @@ public class BluetoothLeService extends Service {
 	};
 
 	private void sendHr(final BluetoothGattCharacteristic characteristic) {
-		Log.i("BluetoothLeService", "in sendHR gatt");
 		if (UUID_HEART_RATE_MEASUREMENT.equals(characteristic.getUuid())) {
 			// prep to collect info into object
 
@@ -180,8 +179,6 @@ public class BluetoothLeService extends Service {
 				format = BluetoothGattCharacteristic.FORMAT_UINT8;
 			}
 			int hr = characteristic.getIntValue(format, 1);
-
-			Log.i("HR measurement", String.valueOf(UniBus.get() == null));
 
 			// Post heart measurement
 			UniBus.get().post(new HR(hr));
