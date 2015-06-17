@@ -7,6 +7,6 @@
         android:color="@color/accent2"/>
 
     <size
-        android:width="50dp"
-        android:height="50dp"/>
+        android:width="@dimen/ball_height"
+        android:height="@dimen/ball_height"/>
 </shape>

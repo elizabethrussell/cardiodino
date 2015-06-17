@@ -1,8 +1,10 @@
 package com.datadoghealth.cardiodino;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
@@ -10,6 +12,7 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.datadoghealth.cardiodino.core.UniBus;
@@ -17,29 +20,40 @@ import com.datadoghealth.cardiodino.util.HR;
 import com.squareup.otto.Subscribe;
 
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by root on 6/12/15.
  */
 public class AStart extends Activity {
 
-    private static int FUDGE_LIMIT  = 12;   //on average, how much does hr increase or decrease
-    private static int TOLERANCE    = 6;    //potential deviation from previous
+    // hr anchor
+    private int startingHr = -1;
 
-    private static double SCREEN_RE_TARGET = .25; // how much space of screen is above/below target
-    private static double DIST_TO_TARG = .667;  // how much of remaining screen between current and target initially
+    // view layout
+    private static int      FUDGE_LIMIT  = 8;   // on average, how much does hr increase or decrease
+    private static int      TOLERANCE    = 3;    // potential deviation from previous
+    private static int      VIEW_MARGIN  = 100;   // dp above and below maximum target
+    private static double   LOW_HANDICAP = 3;    // it's harder to decrease hr so adjust target bounds for this
+    private        int      ballHeight;
 
-    private int startingHr;
-    private boolean lastTrendUp= true;
-    private int lastStart = -1;
+    // target stuff
+    private boolean lastTrendUp= false;
     private int target;
     private Random rand;
-    private int prevpos = -1;
 
     // views stuff
     private int         screenHeight;
+    private int         screenWidth;
     private TextView    hrTextView;
     private View        targetView;
+    private TextView    targetTextView;
+    private TextView    timerTextView;
+    private TextView    scoreTextView;
+
+    // fun
+    private int score;
+    private static final String TIMER_FORMAT = "%02d:%02d";
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,14 +66,40 @@ public class AStart extends Activity {
         Point size = new Point();
         display.getSize(size);
         screenHeight = size.y;
-        Log.i("ScreenHeight", String.valueOf(screenHeight));
+        screenWidth = size.x;
 
         // assign elements
-        hrTextView = (TextView)findViewById(R.id.start_text_hr);
-        hrTextView.setY(screenHeight / 2);
-        targetView = findViewById(R.id.start_target_area);
-        targetView.setLayoutParams(new LinearLayout.LayoutParams(size.x,screenHeight/4));
-        targetView.setY(0);
+        hrTextView     = (TextView) findViewById(R.id.start_text_hr);
+        ballHeight     = (int)      getResources().getDimension(R.dimen.ball_height);
+        targetView     =            findViewById(R.id.start_target_area);
+        targetTextView = (TextView) findViewById(R.id.start_text_target);
+        timerTextView  = (TextView) findViewById(R.id.start_text_timer);
+        scoreTextView  = (TextView) findViewById(R.id.start_text_score);
+
+        // place ball
+        hrTextView.setX((screenWidth/2)-(ballHeight/2));
+
+        // set score and start timer
+        score = 0;
+        scoreTextView.setText("Score: "+score);
+
+
+        /*new CountDownTimer(300000,1000) {
+            public void onTick(long millisUntilFinished) {
+                timerTextView.setText(""+String.format(TIMER_FORMAT,
+                        TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished),
+                        TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished)-TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
+            }
+
+            public void onFinish() {
+                timerTextView.setText("DONE");
+            }
+        };*/
+
+
+
+        Log.i("Pos params", "screenheight: "+screenHeight+" ballHeight: "+ballHeight);
+
     }
 
 
@@ -67,57 +107,66 @@ public class AStart extends Activity {
     @Subscribe
     public void receivedHR(HR hr)
     {
-        if (lastStart<0) {
-            lastStart = hr.hr;
-            target = lastStart+10;
+        if (startingHr<0){
+            startingHr = hr.hr;
+            newTarget();
         }
         moveCurrent(hr.hr);
-        /*if ((lastTrendUp == (hr.hr>target))||(lastStart<0)) { // XNOR change target
-            newTarget();
-        }*/
+        if (lastTrendUp == (hr.hr>target)) { // XNOR change target
+            hitTarget();
+        }
+    }
+
+    public void hitTarget() {
+        scoreTextView.setText("Score: "+ (++score));
+        newTarget();
     }
 
 
     // Shuffle views to reflect new goal
     public void newTarget(){
-        // gen location of target
-        
+        changeTarget();
+        targetView.setLayoutParams(new RelativeLayout.LayoutParams(screenWidth, 10));
+        int targetAddress = targetToPos(target);
+        targetView.setY(targetAddress);
+        targetTextView.setText(String.valueOf(target));
+        targetTextView.setY(targetAddress -100);
 
-
-        // draw target
-        View v = findViewById(R.id.start_target_area);
+        Log.i("new target", "target: " + target + " position: " + targetAddress);
+        lastTrendUp ^= true;
 
     }
 
 
     // update view for heart rate
-    public void moveCurrent(int current){
+    public void moveCurrent(int current) {
         hrTextView.setText(String.valueOf(current));
+        hrTextView.animate().y(hrToPos(current));
+
+    }
+
+    public int hrToPos(int current) {
         int pos;
-        
-        if (lastTrendUp) {
-            double q = screenHeight*SCREEN_RE_TARGET;
-            double m = (2.0*q / ((double)(lastStart-target)));
-            double b = (q*(1-(2.0*target/(lastStart-target))));
-            pos = (int)(m*current+b);
-            if (current > target) {
-                pos = (int)(m*target+b);
-            }
-            if (pos >screenHeight) {
-                pos = screenHeight;
-            }
-        } else {
-            pos = screenHeight/2;
+        double m = (((2*VIEW_MARGIN)-screenHeight)/((FUDGE_LIMIT*(1+(1/LOW_HANDICAP)))+2*TOLERANCE));
+        double b = (VIEW_MARGIN-(m*(startingHr+FUDGE_LIMIT+TOLERANCE)));
+        pos = (int)(m*current+b);
+        if (lastTrendUp == (current>target)) {  // hit or exceeded target
+            pos = (int) (m*target+b);
+        } else if (pos > screenHeight-(ballHeight/2)) { // hit screen top bound
+            pos = screenHeight-(ballHeight/2);
+        } else if (pos < (ballHeight/2)) {
+            pos = ballHeight/2;
         }
+        int adjustedPos =  (pos-(ballHeight/2));
+        return adjustedPos;
+    }
 
-
-        if (prevpos<0) {
-            prevpos=pos;
-        } else {
-            hrTextView.animate().translationY(pos - prevpos);
-            Log.i("Translation", String.valueOf(pos - prevpos));
-            prevpos = pos;
-        }
+    public int targetToPos(int tar) {
+        int pos;
+        double m = (((2*VIEW_MARGIN)-screenHeight)/((FUDGE_LIMIT*(1+(1/LOW_HANDICAP)))+2*TOLERANCE));
+        double b = (VIEW_MARGIN-(m*(startingHr+FUDGE_LIMIT+TOLERANCE)));
+        pos = (int)(m*tar+b);
+        return pos;
     }
 
 
@@ -125,9 +174,10 @@ public class AStart extends Activity {
         if (rand==null) {
             rand = new Random(System.currentTimeMillis());
         }
-        int tol = rand.nextInt(TOLERANCE) - (TOLERANCE/2);
-        int add = lastTrendUp ? -FUDGE_LIMIT-tol : FUDGE_LIMIT+tol;
-        target +=add;
+        int tol = rand.nextInt(TOLERANCE*2+1) - TOLERANCE;
+        int add = lastTrendUp ? (int)(-(FUDGE_LIMIT/LOW_HANDICAP)-tol) : FUDGE_LIMIT+tol;
+        target = startingHr +add;
+        Log.i("target calc", "tol: "+tol+" add: "+add+" target: "+target);
         return target;
     }
 }

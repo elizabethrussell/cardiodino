@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent" android:background="@color/primary"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:background="@color/primary"
     android:layout_height="match_parent">
 
     <View
@@ -19,4 +18,37 @@
         android:id="@+id/start_text_hr"
         android:layout_gravity="center" />
 
-</LinearLayout>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="50dp"
+        android:textColor="@color/accent1"
+        android:id="@+id/start_text_target"/>
+
+    <TextView
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/start_text_timer"
+        android:textColor="@color/accent2"
+        />
+
+    <TextView
+        android:layout_below="@id/start_text_timer"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_marginRight="30dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/start_text_score"
+        android:textColor="@color/accent2"/>
+
+
+</RelativeLayout>
