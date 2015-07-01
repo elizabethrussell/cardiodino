@@ -28,11 +28,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,6 +42,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -114,20 +116,16 @@ public class BluetoothScan extends Activity {
         Log.i(TAG, "onResume");
         super.onResume();
 
-        SwitchCompat sc = (SwitchCompat) findViewById(R.id.bluetooth_switch);
 
         // different behaviors depending on whether bluetooth is enabled
         if (!mBluetoothAdapter.isEnabled()) {
             // set toggle
-            sc.setChecked(false);
 
             // set visibility of card telling user to turn bluetooth on
-            CardView cv = (CardView) findViewById(R.id.bluetooth_message);
+            LinearLayout cv = (LinearLayout) findViewById(R.id.bluetooth_message);
             cv.setVisibility(View.VISIBLE);
         } else {
             // set toggle
-            sc.setChecked(true);
-
 
             // populate device list, start scanning
             initializeDeviceList();
@@ -140,10 +138,14 @@ public class BluetoothScan extends Activity {
     private void initializeDeviceList() {
 
         // set visibility of card telling user to turn bluetooth on
-        CardView cv1 = (CardView) findViewById(R.id.bluetooth_status);
+        LinearLayout cv1 = (LinearLayout) findViewById(R.id.bluetooth_status);
         cv1.setVisibility(View.VISIBLE);
-        CardView cv2 = (CardView) findViewById(R.id.devices_card);
+        LinearLayout cv2 = (LinearLayout) findViewById(R.id.devices_card);
         cv2.setVisibility(View.VISIBLE);
+
+        TextView title = (TextView) findViewById(R.id.textView);
+        Typeface font = Typeface.createFromAsset(getAssets(), "SigmarOne.ttf");
+        title.setTypeface(font);
 
         // Initializes list view adapter.
         ListView devicesListView = (ListView) findViewById(R.id.devices_list);
@@ -162,25 +164,6 @@ public class BluetoothScan extends Activity {
         });
     }
 
-    public void switchedBluetooth(View v) {
-        SwitchCompat sc = (SwitchCompat) v;
-        if (sc.isChecked()) {
-            mBluetoothAdapter.enable();
-            //sc.setVisibility(View.GONE);
-            sc.setClickable(false);
-            TextView tv = (TextView) findViewById(R.id.bluetooth_switch_text);
-            tv.setText("Enabling...");
-
-        } else {
-            mBluetoothAdapter.disable();
-            //sc.setVisibility(View.GONE);
-            sc.setClickable(false);
-            TextView tv = (TextView) findViewById(R.id.bluetooth_switch_text);
-            tv.setText("Disabling...");
-
-            bluetoothOffViewUpdate();
-        }
-    }
 
 
     // handle connectivity for bluetooth switch
@@ -188,17 +171,7 @@ public class BluetoothScan extends Activity {
         public void onReceive(Context context, Intent intent ) {
             final int state = intent.getExtras().getInt(BluetoothAdapter.EXTRA_STATE);
             if (state == BluetoothAdapter.STATE_OFF) {
-                TextView tv = (TextView) findViewById(R.id.bluetooth_switch_text);
-                tv.setText("Bluetooth");
-                SwitchCompat sc = (SwitchCompat) findViewById(R.id.bluetooth_switch);
-                //sc.setVisibility(View.VISIBLE);
-                sc.setClickable(true);
             } else if (state == BluetoothAdapter.STATE_ON) {
-                TextView tv = (TextView) findViewById(R.id.bluetooth_switch_text);
-                tv.setText("Bluetooth");
-                SwitchCompat sc = (SwitchCompat) findViewById(R.id.bluetooth_switch);
-                //sc.setVisibility(View.VISIBLE);
-                sc.setClickable(true);
                 bluetoothOnViewUpdate();
             }
         }
@@ -206,17 +179,17 @@ public class BluetoothScan extends Activity {
 
 
     public void bluetoothOnViewUpdate() {
-        CardView cv = (CardView) findViewById(R.id.bluetooth_message);
+        LinearLayout cv = (LinearLayout) findViewById(R.id.bluetooth_message);
         cv.setVisibility(View.GONE);
         initializeDeviceList();
     }
 
     public void bluetoothOffViewUpdate() {
-        CardView cv = (CardView) findViewById(R.id.bluetooth_message);
+        LinearLayout cv = (LinearLayout) findViewById(R.id.bluetooth_message);
         cv.setVisibility(View.VISIBLE);
-        CardView cv1 = (CardView) findViewById(R.id.bluetooth_status);
+        LinearLayout cv1 = (LinearLayout) findViewById(R.id.bluetooth_status);
         cv1.setVisibility(View.GONE);
-        CardView cv2 = (CardView) findViewById(R.id.devices_card);
+        LinearLayout cv2 = (LinearLayout) findViewById(R.id.devices_card);
         cv2.setVisibility(View.GONE);
     }
 
@@ -350,7 +323,10 @@ public class BluetoothScan extends Activity {
             // General ListView optimization code.
             if (view == null) {
                 view = mInflator.inflate(R.layout.layout_bluetooth_device, null);
+
                 viewHolder = new ViewHolder();
+                ImageView im = (ImageView)view.findViewById(R.id.imageView);
+                im.setColorFilter(getResources().getColor(R.color.red_heartrace));
                 viewHolder.deviceAddress = (TextView) view
                         .findViewById(R.id.device_address);
                 viewHolder.deviceName = (TextView) view

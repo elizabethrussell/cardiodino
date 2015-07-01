@@ -35,11 +35,13 @@
         <TextView android:id="@+id/device_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"/>
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/white"/>
 
         <TextView android:id="@+id/device_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"/>
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/white"/>
     </LinearLayout>
 </LinearLayout>

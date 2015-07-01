@@ -16,12 +16,17 @@
         android:theme="@style/AppTheme"
         android:name=".core.AppClass">
 
-        <activity android:name=".bluetooth.BluetoothScan"
-            android:label="CardioDino">
+        <activity android:name=".StartScreen"
+            android:label="Home">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity android:name=".bluetooth.BluetoothScan"
+            android:label="CardioDino">
+
         </activity>
 
         <activity android:name=".bluetooth.BluetoothAfterScan"
@@ -32,6 +37,8 @@
 
         <activity android:name=".AStart"
             android:label="AStart"></activity>
+
+
 
         <service
             android:name=".bluetooth.BluetoothLeService"

@@ -16,5 +16,9 @@
 
     <color name="button_text">@color/accent1</color>
 
+    <color name="primary_color_heartrace">#000000</color>
+    <color name="primary_text_heartrace">@color/white</color>
+    <color name="red_heartrace">#F44336</color>
+
 
 </resources>
