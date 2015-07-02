@@ -13,6 +13,8 @@ import android.widget.TextView;
  * Created by root on 7/1/15.
  */
 public class Levels extends Activity {
+    public static final String EXTRA_LEVEL = "extra_level";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,25 +33,28 @@ public class Levels extends Activity {
         imEasy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(c, Game.class);
+                Intent intent = new Intent(c, Intro.class);
+                intent.putExtra(EXTRA_LEVEL, 1);
                 startActivity(intent);
             }
         });
 
         ImageView imMedium = (ImageView)findViewById(R.id.mode_medium);
-        imEasy.setOnClickListener(new View.OnClickListener() {
+        imMedium.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(c, Game.class);
+                Intent intent = new Intent(c, Intro.class);
+                intent.putExtra(EXTRA_LEVEL, 2);
                 startActivity(intent);
             }
         });
 
         ImageView imHard = (ImageView)findViewById(R.id.mode_hard);
-        imEasy.setOnClickListener(new View.OnClickListener() {
+        imHard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(c, Game.class);
+                Intent intent = new Intent(c, Intro.class);
+                intent.putExtra(EXTRA_LEVEL, 3);
                 startActivity(intent);
             }
         });

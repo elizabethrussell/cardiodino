@@ -41,6 +41,9 @@
         <activity android:name=".Levels"
             android:label="Levels"></activity>
 
+        <activity android:name=".Intro"
+            android:label="Intro"></activity>
+
 
 
         <service

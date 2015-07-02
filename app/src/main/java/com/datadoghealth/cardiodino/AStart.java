@@ -2,6 +2,7 @@ package com.datadoghealth.cardiodino;
 
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -30,8 +31,13 @@ public class AStart extends Activity {
     // hr anchor
     private int startingHr = -1;
 
+    // game level adjusters
+    private int numberTargets;
+    private final int[] targetNums = new int[]{6, 10, 16};
+    private final int[] fudges = new int[]{6, 8, 10};
+
     // view layout
-    private static int      FUDGE_LIMIT  = 8;   // on average, how much does hr increase or decrease
+    private static int      FUDGE_LIMIT;        // on average, how much does hr increase or decrease
     private static int      TOLERANCE    = 3;    // potential deviation from previous
     private static int      VIEW_MARGIN  = 100;   // dp above and below maximum target
     private static double   LOW_HANDICAP = 3;    // it's harder to decrease hr so adjust target bounds for this
@@ -52,7 +58,7 @@ public class AStart extends Activity {
     private TextView    scoreTextView;
 
     // fun
-    private int score;
+    private int remaining;
     private static final String TIMER_FORMAT = "%02d:%02d";
 
 
@@ -60,6 +66,13 @@ public class AStart extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
+        // extract game mode
+        Intent intent = getIntent();
+        int level = intent.getIntExtra(Levels.EXTRA_LEVEL,0);
+        FUDGE_LIMIT = fudges[level-1];
+        numberTargets = targetNums[level-1];
+
+        // rollout bus
         UniBus.get().register(this);
 
         // gather display dimensions
@@ -81,10 +94,8 @@ public class AStart extends Activity {
         hrTextView.setX((screenWidth/2)-(ballHeight/2));
 
         // set score and start timer
-        score = 0;
-        scoreTextView.setText("Score: "+score);
-
-
+        remaining = numberTargets;
+        scoreTextView.setText("Targets remaining: "+remaining);
         /*new CountDownTimer(300000,1000) {
             public void onTick(long millisUntilFinished) {
                 timerTextView.setText(""+String.format(TIMER_FORMAT,
@@ -119,7 +130,7 @@ public class AStart extends Activity {
     }
 
     public void hitTarget() {
-        scoreTextView.setText("Score: "+ (++score));
+        scoreTextView.setText("Targets remaining: "+ (--remaining));
         newTarget();
     }
 
