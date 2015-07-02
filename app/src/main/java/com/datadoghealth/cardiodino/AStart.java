@@ -59,6 +59,7 @@ public class AStart extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
+
         UniBus.get().register(this);
 
         // gather display dimensions

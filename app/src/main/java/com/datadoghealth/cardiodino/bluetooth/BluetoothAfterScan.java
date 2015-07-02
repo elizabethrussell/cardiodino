@@ -3,6 +3,7 @@ package com.datadoghealth.cardiodino.bluetooth;
 import java.util.List;
 
 import com.datadoghealth.cardiodino.AStart;
+import com.datadoghealth.cardiodino.Levels;
 import com.datadoghealth.cardiodino.R;
 import com.datadoghealth.cardiodino.core.UniBus;
 import com.datadoghealth.cardiodino.util.HR;
@@ -228,7 +229,7 @@ public class BluetoothAfterScan extends Activity {
 
     public void exit() {
         if (!movedOn) {
-            final Intent intent = new Intent(this, AStart.class);
+            final Intent intent = new Intent(this, Levels.class);
             startActivity(intent);
             overridePendingTransition(R.anim.right_slide_in, R.anim.left_slide_out);
         }

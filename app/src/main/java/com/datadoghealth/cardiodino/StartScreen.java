@@ -59,15 +59,13 @@ public class StartScreen extends Activity {
         graph.getViewport().setYAxisBoundsManual(true);
         graph.getViewport().setMinY(-4);
         graph.getViewport().setMaxY(12);
-
-
-
         graph.getGridLabelRenderer().setHorizontalLabelsVisible(false);
         graph.getGridLabelRenderer().setVerticalLabelsVisible(false);
         graph.getGridLabelRenderer().setGridStyle(GridLabelRenderer.GridStyle.NONE);
 
         final LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>();
         series.setColor(getResources().getColor(R.color.red_heartrace));
+        series.setThickness(8);
         graph.addSeries(series);
 
         Runnable timer = new Runnable() {

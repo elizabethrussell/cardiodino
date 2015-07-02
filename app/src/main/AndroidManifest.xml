@@ -38,6 +38,9 @@
         <activity android:name=".AStart"
             android:label="AStart"></activity>
 
+        <activity android:name=".Levels"
+            android:label="Levels"></activity>
+
 
 
         <service
