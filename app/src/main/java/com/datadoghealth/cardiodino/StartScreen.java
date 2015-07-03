@@ -45,10 +45,19 @@ public class StartScreen extends Activity {
             public void onClick(View v) {
                 Intent intent = new Intent(c, BluetoothScan.class);
                 startActivity(intent);
+                overridePendingTransition(R.anim.right_slide_in, R.anim.left_slide_out);
             }
         });
         //play.setTypeface(font);
         TextView highScore = (TextView) findViewById(R.id.home_high_scores);
+        highScore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(c,HighScores.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.right_slide_in, R.anim.left_slide_out);
+            }
+        });
         //highScore.setTypeface(font);
 
         // init graphview
@@ -114,18 +123,4 @@ public class StartScreen extends Activity {
         return 0;
     }
 
-
-    private DataPoint[] generateData() {
-        Random r = new Random();
-        int count = 30;
-        DataPoint[] values = new DataPoint[count];
-        for (int i=0; i<count; i++) {
-            double x = i;
-            double f = r.nextDouble()*0.15+0.3;
-            double y = Math.sin(i*f+2) + r.nextDouble()*0.3;
-            DataPoint v = new DataPoint(x, y);
-            values[i] = v;
-        }
-        return values;
-    }
 }

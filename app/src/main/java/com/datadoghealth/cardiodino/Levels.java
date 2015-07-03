@@ -36,6 +36,7 @@ public class Levels extends Activity {
                 Intent intent = new Intent(c, Intro.class);
                 intent.putExtra(EXTRA_LEVEL, 1);
                 startActivity(intent);
+                overridePendingTransition(R.anim.right_slide_in, R.anim.left_slide_out);
             }
         });
 
@@ -46,6 +47,7 @@ public class Levels extends Activity {
                 Intent intent = new Intent(c, Intro.class);
                 intent.putExtra(EXTRA_LEVEL, 2);
                 startActivity(intent);
+                overridePendingTransition(R.anim.right_slide_in, R.anim.left_slide_out);
             }
         });
 
@@ -56,6 +58,7 @@ public class Levels extends Activity {
                 Intent intent = new Intent(c, Intro.class);
                 intent.putExtra(EXTRA_LEVEL, 3);
                 startActivity(intent);
+                overridePendingTransition(R.anim.right_slide_in, R.anim.left_slide_out);
             }
         });
 

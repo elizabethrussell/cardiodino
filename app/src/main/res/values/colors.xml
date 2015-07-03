@@ -21,6 +21,7 @@
     <color name="red_heartrace">#F44336</color>
     <color name="green_heartrace">#4CAF50</color>
     <color name="yellow_heartrace">#FFEB3B</color>
+    <color name="gray_heartrace">#616161</color>
 
 
 </resources>

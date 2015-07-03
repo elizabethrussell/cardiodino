@@ -8,6 +8,10 @@ import com.datadoghealth.cardiodino.R;
 import com.datadoghealth.cardiodino.core.UniBus;
 import com.datadoghealth.cardiodino.util.HR;
 import com.datadoghealth.cardiodino.util.SharedPrefs;
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.GridLabelRenderer;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
 import com.squareup.otto.Subscribe;
 
 import android.app.Activity;
@@ -40,6 +44,9 @@ import static com.datadoghealth.cardiodino.core.UniBus.*;
  */
 public class BluetoothAfterScan extends Activity {
     private final static String TAG = BluetoothAfterScan.class.getSimpleName();
+    private final Handler handler = new Handler();
+    private double x = 1d;
+
 
     public static final String EXTRAS_DEVICE_NAME = "DEVICE_NAME";
     public static final String EXTRAS_DEVICE_ADDRESS = "DEVICE_ADDRESS";
@@ -106,6 +113,34 @@ public class BluetoothAfterScan extends Activity {
         context = this;
         setContentView(R.layout.activity_wait_for_connection);
 
+        // set graphview up
+        // init graphview
+        GraphView graph = (GraphView) findViewById(R.id.home_plot);
+        graph.getViewport().setXAxisBoundsManual(true);
+        graph.getViewport().setMinX(0);
+        graph.getViewport().setMaxX(mod);
+        graph.getViewport().setYAxisBoundsManual(true);
+        graph.getViewport().setMinY(-4);
+        graph.getViewport().setMaxY(12);
+        graph.getGridLabelRenderer().setHorizontalLabelsVisible(false);
+        graph.getGridLabelRenderer().setVerticalLabelsVisible(false);
+        graph.getGridLabelRenderer().setGridStyle(GridLabelRenderer.GridStyle.NONE);
+
+        final LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>();
+        series.setColor(getResources().getColor(R.color.red_heartrace));
+        series.setThickness(8);
+        graph.addSeries(series);
+
+        Runnable timer = new Runnable() {
+            @Override
+            public void run() {
+                boolean scroll = (x>mod);
+                series.appendData(new DataPoint(x++, getNextPoint()),scroll, mod);
+                handler.postDelayed(this, 20);
+            }
+        };
+        handler.postDelayed(timer, 1000);
+
         UniBus.get().register(this);
 
         // Connect to some device address
@@ -120,6 +155,9 @@ public class BluetoothAfterScan extends Activity {
         Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
         getApplicationContext().bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
 
+        // start graphview
+
+
 
         // launch not connected activity if it doesn't connect after 15 seconds//2 minutes
         Handler handler = new Handler();
@@ -128,6 +166,7 @@ public class BluetoothAfterScan extends Activity {
                 if (!movedOn) {
                     Intent i = new Intent(context, BluetoothConnectFailed.class);
                     startActivity(i);
+                    overridePendingTransition(R.anim.right_slide_in, R.anim.left_slide_out);
                 }
             }
         }, 10*60000);
@@ -233,6 +272,39 @@ public class BluetoothAfterScan extends Activity {
             startActivity(intent);
             overridePendingTransition(R.anim.right_slide_in, R.anim.left_slide_out);
         }
+    }
+
+    double a = 10;
+    double b = a+10;
+    double c = b+3;
+    double d = c+3;
+    double e = d+3;
+    double f = e+2;
+    double g = f+5;
+    double h = g+5;
+    double i = h+10;
+    private int mod = (int)i+30;
+    private double getNextPoint() {
+        int adjx = (int)x%mod;
+        if (adjx >= a && adjx <b) {
+            return (Math.sin((adjx-a)*(Math.PI/(b-a))));
+        }
+        if (adjx >= h && adjx <i) {
+            return (1.5*Math.sin((adjx-h)*(Math.PI/(i-h))));
+        }
+        if (adjx >= c && adjx <d) {
+            return ((.8/(c-d))*(adjx-c));
+        }
+        if (adjx >=d && adjx <e) {
+            return ((-10.8/(d-e))*(adjx-e)+10);
+        }
+        if (adjx >=e && adjx <f) {
+            return ((14/(e-f))*(adjx-e)+10);
+        }
+        if (adjx >=f && adjx <g) {
+            return ((-4/(f-g))*(adjx-g));
+        }
+        return 0;
     }
 
 }

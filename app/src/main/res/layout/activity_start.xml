@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:background="@color/primary"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:background="@color/primary_color_heartrace"
     android:layout_height="match_parent">
 
     <View
         android:id="@+id/start_target_area"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@color/accent1"/>
+        android:background="@color/yellow_heartrace"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -14,7 +14,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/primary"
         android:gravity="center"
-        android:background="@drawable/circle"
+        android:background="@drawable/ic_favorite_red_48px"
         android:id="@+id/start_text_hr"
         android:layout_gravity="center" />
 
@@ -26,7 +26,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="50dp"
-        android:textColor="@color/accent1"
+        android:textColor="@color/yellow_heartrace"
         android:id="@+id/start_text_target"/>
 
     <TextView
@@ -37,7 +37,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/start_text_timer"
-        android:textColor="@color/accent2"
+        android:textColor="@color/green_heartrace"
         />
 
     <TextView
@@ -48,7 +48,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/start_text_score"
-        android:textColor="@color/accent2"/>
+        android:textColor="@color/green_heartrace"/>
 
 
 </RelativeLayout>

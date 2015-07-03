@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -68,7 +69,7 @@ public class AStart extends Activity {
 
         // extract game mode
         Intent intent = getIntent();
-        int level = intent.getIntExtra(Levels.EXTRA_LEVEL,0);
+        int level = intent.getIntExtra(Levels.EXTRA_LEVEL, 0);
         FUDGE_LIMIT = fudges[level-1];
         numberTargets = targetNums[level-1];
 
@@ -90,8 +91,10 @@ public class AStart extends Activity {
         timerTextView  = (TextView) findViewById(R.id.start_text_timer);
         scoreTextView  = (TextView) findViewById(R.id.start_text_score);
 
-        // place ball
+        // place ball and pulse
         hrTextView.setX((screenWidth/2)-(ballHeight/2));
+        Animation pulse = AnimationUtils.loadAnimation(this, R.anim.pulse);
+        hrTextView.startAnimation(pulse);
 
         // set score and start timer
         remaining = numberTargets;

@@ -17,7 +17,7 @@
         android:name=".core.AppClass">
 
         <activity android:name=".StartScreen"
-            android:label="Home">
+            android:label="HeartRace">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -43,6 +43,9 @@
 
         <activity android:name=".Intro"
             android:label="Intro"></activity>
+
+        <activity android:name=".HighScores"
+            android:label="HighScores"></activity>
 
 
 
