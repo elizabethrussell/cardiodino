@@ -42,9 +42,9 @@
 
     <TextView
         android:layout_below="@id/start_text_timer"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentLeft="true"
         android:layout_width="wrap_content"
-        android:layout_marginRight="30dp"
+        android:layout_marginLeft="30dp"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/start_text_score"

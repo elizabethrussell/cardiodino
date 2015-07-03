@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
@@ -40,7 +41,7 @@ public class AStart extends Activity {
     // view layout
     private static int      FUDGE_LIMIT;        // on average, how much does hr increase or decrease
     private static int      TOLERANCE    = 3;    // potential deviation from previous
-    private static int      VIEW_MARGIN  = 100;   // dp above and below maximum target
+    private static int      VIEW_MARGIN  = 200;   // dp above and below maximum target
     private static double   LOW_HANDICAP = 3;    // it's harder to decrease hr so adjust target bounds for this
     private        int      ballHeight;
 
@@ -61,6 +62,19 @@ public class AStart extends Activity {
     // fun
     private int remaining;
     private static final String TIMER_FORMAT = "%02d:%02d";
+    private Handler handler = new Handler();
+    private long startTime;
+    Runnable timerRunnable = new Runnable() {
+        @Override
+        public void run() {
+            long millis = System.currentTimeMillis() - startTime;
+            int seconds = (int) (millis / 1000);
+            int minutes = seconds / 60;
+            seconds = seconds %60;
+            timerTextView.setText(String.format(TIMER_FORMAT, minutes, seconds));
+            handler.postDelayed(this, 500);
+        }
+    };
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,28 +107,12 @@ public class AStart extends Activity {
 
         // place ball and pulse
         hrTextView.setX((screenWidth/2)-(ballHeight/2));
-        Animation pulse = AnimationUtils.loadAnimation(this, R.anim.pulse);
-        hrTextView.startAnimation(pulse);
 
         // set score and start timer
         remaining = numberTargets;
-        scoreTextView.setText("Targets remaining: "+remaining);
-        /*new CountDownTimer(300000,1000) {
-            public void onTick(long millisUntilFinished) {
-                timerTextView.setText(""+String.format(TIMER_FORMAT,
-                        TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished),
-                        TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished)-TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
-            }
-
-            public void onFinish() {
-                timerTextView.setText("DONE");
-            }
-        };*/
-
-
-
-        Log.i("Pos params", "screenheight: "+screenHeight+" ballHeight: "+ballHeight);
-
+        scoreTextView.setText("Targets\nremaining:\n"+remaining);
+        startTime = System.currentTimeMillis();
+        handler.postDelayed(timerRunnable, 0);
     }
 
 
@@ -167,9 +165,9 @@ public class AStart extends Activity {
         pos = (int)(m*current+b);
         if (lastTrendUp == (current>target)) {  // hit or exceeded target
             pos = (int) (m*target+b);
-        } else if (pos > screenHeight-(ballHeight/2)) { // hit screen top bound
-            pos = screenHeight-(ballHeight/2);
-        } else if (pos < (ballHeight/2)) {
+        } else if (pos > screenHeight-(ballHeight)) { // hit bottom screen bound
+            pos = screenHeight-(ballHeight);
+        } else if (pos < (ballHeight/2)) { // hit top screen bound
             pos = ballHeight/2;
         }
         int adjustedPos =  (pos-(ballHeight/2));
