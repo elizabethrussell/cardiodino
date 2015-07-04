@@ -2,6 +2,9 @@ package com.datadoghealth.cardiodino;
 
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Point;
@@ -9,12 +12,14 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -138,11 +143,12 @@ public class AStart extends Activity {
     }
 
     public void hitTarget() {
-        if (remaining == 1) {
+        done(System.currentTimeMillis()-startTime);
+        /*if (remaining == 1) {
             done(System.currentTimeMillis() - startTime);
         }
-        scoreTextView.setText("Targets remaining: " + (--remaining));
-        newTarget();
+        scoreTextView.setText(""+(--remaining));
+        newTarget();*/
     }
 
 
@@ -205,13 +211,15 @@ public class AStart extends Activity {
     }
 
     public String trash = "dd_trash";
+    public String gamescore;
 
     public void done(long time) {
-        done = true; int sc1; int sc2; int sc3;
+        done = true;
         int seconds = (int) (time / 1000);
         int minutes = seconds / 60;
         seconds = seconds %60;
         String myScoreStr = String.format(TIMER_FORMAT, minutes, seconds);
+        gamescore = myScoreStr;
         int myScore = scoreFromString(myScoreStr);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String[] sc;
@@ -325,12 +333,35 @@ public class AStart extends Activity {
 
     }
 
-    public void dialog(boolean newHighScore, String which, String ds1, String ds2) {
+    public void dialog(boolean newHighScore, final String which, final String ds1, final String ds2) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final Context c = this;
         if (newHighScore) { // display dialog where name is entered
+            final EditText input = new EditText(c);
+            input.setInputType(InputType.TYPE_CLASS_TEXT);
+            input.setHint("Your name?");
+            builder.setView(input)
+                    .setTitle("New High Score: "+gamescore+"!")
+                    .setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            String name = input.getText().toString();
+                            String save = name+"|"+gamescore;
+                            updatePrefs(save, which, ds1, ds2);
+                        }
+                    });
 
         } else { // display dialog without name entry
-
+            String  msg = "Nice!  Your time was "+gamescore;
+            builder.setMessage(msg)
+                    .setTitle("You did it!")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            Intent intent = new Intent(c, StartScreen.class);
+                            startActivity(intent);
+                        }
+                    });
         }
+        AlertDialog dialog = builder.create();
 
     }
 
