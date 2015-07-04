@@ -143,7 +143,7 @@ public class AStart extends Activity {
     }
 
     public void hitTarget() {
-        done(System.currentTimeMillis()-startTime);
+        if (!done) done(System.currentTimeMillis()-startTime); done = true;
         /*if (remaining == 1) {
             done(System.currentTimeMillis() - startTime);
         }
@@ -361,7 +361,7 @@ public class AStart extends Activity {
                         }
                     });
         }
-        AlertDialog dialog = builder.create();
+        AlertDialog dialog = builder.show();
 
     }
 
