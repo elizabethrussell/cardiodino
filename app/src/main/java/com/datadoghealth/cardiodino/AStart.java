@@ -3,10 +3,12 @@ package com.datadoghealth.cardiodino;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
@@ -20,6 +22,7 @@ import android.widget.TextView;
 
 import com.datadoghealth.cardiodino.core.UniBus;
 import com.datadoghealth.cardiodino.util.HR;
+import com.datadoghealth.cardiodino.util.SharedPrefs;
 import com.squareup.otto.Subscribe;
 
 import java.util.Random;
@@ -60,6 +63,7 @@ public class AStart extends Activity {
     private TextView    scoreTextView;
 
     // fun
+    private int level;
     private int remaining;
     private static final String TIMER_FORMAT = "%02d:%02d";
     private Handler handler = new Handler();
@@ -67,6 +71,7 @@ public class AStart extends Activity {
     Runnable timerRunnable = new Runnable() {
         @Override
         public void run() {
+            if (done) return;
             long millis = System.currentTimeMillis() - startTime;
             int seconds = (int) (millis / 1000);
             int minutes = seconds / 60;
@@ -75,6 +80,7 @@ public class AStart extends Activity {
             handler.postDelayed(this, 500);
         }
     };
+    private boolean done = false;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +89,7 @@ public class AStart extends Activity {
 
         // extract game mode
         Intent intent = getIntent();
-        int level = intent.getIntExtra(Levels.EXTRA_LEVEL, 0);
+        level = intent.getIntExtra(Levels.EXTRA_LEVEL, 0);
         FUDGE_LIMIT = fudges[level-1];
         numberTargets = targetNums[level-1];
 
@@ -110,7 +116,7 @@ public class AStart extends Activity {
 
         // set score and start timer
         remaining = numberTargets;
-        scoreTextView.setText("Targets\nremaining:\n"+remaining);
+        scoreTextView.setText(""+remaining);
         startTime = System.currentTimeMillis();
         handler.postDelayed(timerRunnable, 0);
     }
@@ -121,6 +127,7 @@ public class AStart extends Activity {
     public void receivedHR(HR hr)
     {
         if (startingHr<0){
+            if (hr.hr<40) return;
             startingHr = hr.hr;
             newTarget();
         }
@@ -131,7 +138,10 @@ public class AStart extends Activity {
     }
 
     public void hitTarget() {
-        scoreTextView.setText("Targets remaining: "+ (--remaining));
+        if (remaining == 1) {
+            done(System.currentTimeMillis() - startTime);
+        }
+        scoreTextView.setText("Targets remaining: " + (--remaining));
         newTarget();
     }
 
@@ -192,5 +202,154 @@ public class AStart extends Activity {
         target = startingHr +add;
         Log.i("target calc", "tol: "+tol+" add: "+add+" target: "+target);
         return target;
+    }
+
+    public String trash = "dd_trash";
+
+    public void done(long time) {
+        done = true; int sc1; int sc2; int sc3;
+        int seconds = (int) (time / 1000);
+        int minutes = seconds / 60;
+        seconds = seconds %60;
+        String myScoreStr = String.format(TIMER_FORMAT, minutes, seconds);
+        int myScore = scoreFromString(myScoreStr);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String[] sc;
+        switch(level){
+            case 1:
+                sc = prefs.getString(SharedPrefs.HS_EASY_1,"").split("|");
+                if (sc.length>1) {
+                    String score = sc[1];
+                    if (myScore < scoreFromString(score)) {
+                        dialog(true, SharedPrefs.HS_EASY_1, SharedPrefs.HS_EASY_2, SharedPrefs.HS_EASY_3);
+                        break;
+                    } else {
+                        sc = prefs.getString(SharedPrefs.HS_EASY_2,"").split("|");
+                        if (sc.length>1) {
+                            score = sc[1];
+                            if (myScore<scoreFromString(score)) {
+                                dialog(true, SharedPrefs.HS_EASY_2, SharedPrefs.HS_EASY_3, trash);
+                                break;
+                            } else {
+                                sc = prefs.getString(SharedPrefs.HS_EASY_3,"").split("|");
+                                if (sc.length>1) {
+                                    score = sc[1];
+                                    if (myScore < scoreFromString(score)){
+                                        dialog(true, SharedPrefs.HS_EASY_3, trash, trash);
+                                        break;
+                                    } else {
+                                        dialog(false, trash, trash, trash); break;
+                                    }
+                                } else {
+                                    dialog(true, SharedPrefs.HS_EASY_3, trash, trash); break;
+                                }
+                            }
+                        } else {
+                            dialog(true, SharedPrefs.HS_EASY_2, trash, trash); break;
+                        }
+                    }
+                } else {
+                    dialog(true, SharedPrefs.HS_EASY_1, trash, trash); break;
+                }
+            case 2:
+                sc = prefs.getString(SharedPrefs.HS_MEDI_1,"").split("|");
+                if (sc.length>1) {
+                    String score = sc[1];
+                    if (myScore < scoreFromString(score)) {
+                        dialog(true, SharedPrefs.HS_MEDI_1, SharedPrefs.HS_MEDI_2, SharedPrefs.HS_MEDI_3);
+                        break;
+                    } else {
+                        sc = prefs.getString(SharedPrefs.HS_MEDI_2,"").split("|");
+                        if (sc.length>1) {
+                            score = sc[1];
+                            if (myScore<scoreFromString(score)) {
+                                dialog(true, SharedPrefs.HS_MEDI_2, SharedPrefs.HS_MEDI_3, trash);
+                                break;
+                            } else {
+                                sc = prefs.getString(SharedPrefs.HS_MEDI_3,"").split("|");
+                                if (sc.length>1) {
+                                    score = sc[1];
+                                    if (myScore < scoreFromString(score)){
+                                        dialog(true, SharedPrefs.HS_MEDI_3, trash, trash);
+                                        break;
+                                    } else {
+                                        dialog(false, trash, trash, trash); break;
+                                    }
+                                } else {
+                                    dialog(true, SharedPrefs.HS_MEDI_3, trash, trash); break;
+                                }
+                            }
+                        } else {
+                            dialog(true, SharedPrefs.HS_MEDI_2, trash, trash); break;
+                        }
+                    }
+                } else {
+                    dialog(true, SharedPrefs.HS_MEDI_1, trash, trash); break;
+                }
+            case 3:
+                sc = prefs.getString(SharedPrefs.HS_HARD_1,"").split("|");
+                if (sc.length>1) {
+                    String score = sc[1];
+                    if (myScore < scoreFromString(score)) {
+                        dialog(true, SharedPrefs.HS_HARD_1, SharedPrefs.HS_HARD_2, SharedPrefs.HS_HARD_3);
+                        break;
+                    } else {
+                        sc = prefs.getString(SharedPrefs.HS_HARD_2,"").split("|");
+                        if (sc.length>1) {
+                            score = sc[1];
+                            if (myScore<scoreFromString(score)) {
+                                dialog(true, SharedPrefs.HS_HARD_2, SharedPrefs.HS_HARD_3, trash);
+                                break;
+                            } else {
+                                sc = prefs.getString(SharedPrefs.HS_HARD_3,"").split("|");
+                                if (sc.length>1) {
+                                    score = sc[1];
+                                    if (myScore < scoreFromString(score)){
+                                        dialog(true, SharedPrefs.HS_HARD_3, trash, trash);
+                                        break;
+                                    } else {
+                                        dialog(false, trash, trash, trash); break;
+                                    }
+                                } else {
+                                    dialog(true, SharedPrefs.HS_HARD_3, trash, trash); break;
+                                }
+                            }
+                        } else {
+                            dialog(true, SharedPrefs.HS_HARD_2, trash, trash); break;
+                        }
+                    }
+                } else {
+                    dialog(true, SharedPrefs.HS_HARD_1, trash, trash); break;
+                }
+        }
+
+    }
+
+    public void dialog(boolean newHighScore, String which, String ds1, String ds2) {
+        if (newHighScore) { // display dialog where name is entered
+
+        } else { // display dialog without name entry
+
+        }
+
+    }
+
+    public void updatePrefs(String newscore, String which, String ds1, String ds2) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = prefs.edit();
+        String a = prefs.getString(which, "");
+        String b = prefs.getString(ds1, "");
+        editor.putString(which, newscore);
+        if (ds1!="" && a!="") editor.putString(ds1, a);
+        if (ds2!="" && b!="") editor.putString(ds2, b);
+        editor.apply();
+    }
+
+
+    public int scoreFromString(String s) {
+        int minutes = Integer.parseInt(s.substring(0,2));
+        int seconds = Integer.parseInt(s.substring(3));
+        int score = 60*minutes+seconds;
+        return score;
     }
 }
