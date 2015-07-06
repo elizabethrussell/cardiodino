@@ -1,4 +1,4 @@
-package com.datadoghealth.cardiodino.core;
+package com.datadoghealth.heartrace.core;
 
 /**
  * Created by elizabethrussell on 5/8/15.

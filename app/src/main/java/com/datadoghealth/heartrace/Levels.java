@@ -1,4 +1,4 @@
-package com.datadoghealth.cardiodino;
+package com.datadoghealth.heartrace;
 
 import android.app.Activity;
 import android.content.Context;

@@ -1,24 +1,19 @@
-package com.datadoghealth.cardiodino;
+package com.datadoghealth.heartrace;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.DashPathEffect;
-import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.TextView;
 
-import com.datadoghealth.cardiodino.bluetooth.BluetoothScan;
+import com.datadoghealth.heartrace.bluetooth.BluetoothScan;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GridLabelRenderer;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
-
-import java.util.Random;
-import java.util.Timer;
 
 /**
  * Created by root on 6/30/15.

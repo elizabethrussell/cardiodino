@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.datadoghealth.cardiodino.bluetooth;
+package com.datadoghealth.heartrace.bluetooth;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -33,11 +33,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -50,8 +47,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.datadoghealth.cardiodino.R;
-import com.datadoghealth.cardiodino.util.SharedPrefs;
+import com.datadoghealth.heartrace.R;
+import com.datadoghealth.heartrace.util.SharedPrefs;
 import com.gc.materialdesign.views.ButtonFlat;
 
 import java.lang.Object;import java.lang.Override;import java.lang.Runnable;import java.lang.String;import java.util.ArrayList;

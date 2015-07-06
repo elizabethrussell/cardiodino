@@ -15,9 +15,9 @@
 
 
 
-
             <LinearLayout
                 android:orientation="vertical"
+                android:layout_centerInParent="true"
                 android:id="@+id/bluetooth_message"
                 android:visibility="gone"
                 android:layout_weight="1"
@@ -28,6 +28,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
                     android:layout_margin="8dp"
                     android:text="Please turn on bluetooth so we can scan for your heart rate device."
                     android:textAppearance="?android:attr/textAppearanceMedium"

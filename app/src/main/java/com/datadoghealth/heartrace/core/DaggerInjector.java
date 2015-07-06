@@ -1,4 +1,4 @@
-package com.datadoghealth.cardiodino.core;
+package com.datadoghealth.heartrace.core;
 
 /**
  * Interface for Dagger graph object injection

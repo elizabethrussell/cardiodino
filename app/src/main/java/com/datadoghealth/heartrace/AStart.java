@@ -1,6 +1,5 @@
-package com.datadoghealth.cardiodino;
+package com.datadoghealth.heartrace;
 
-import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -8,30 +7,24 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Point;
+import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.TranslateAnimation;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.datadoghealth.cardiodino.core.UniBus;
-import com.datadoghealth.cardiodino.util.HR;
-import com.datadoghealth.cardiodino.util.SharedPrefs;
+import com.datadoghealth.heartrace.core.UniBus;
+import com.datadoghealth.heartrace.util.HR;
+import com.datadoghealth.heartrace.util.SharedPrefs;
 import com.squareup.otto.Subscribe;
 
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by root on 6/12/15.
@@ -86,6 +79,7 @@ public class AStart extends Activity {
         }
     };
     private boolean done = false;
+    private MediaPlayer mp;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +91,8 @@ public class AStart extends Activity {
         level = intent.getIntExtra(Levels.EXTRA_LEVEL, 0);
         FUDGE_LIMIT = fudges[level-1];
         numberTargets = targetNums[level-1];
+
+        mp = MediaPlayer.create(this, R.raw.gotem2);
 
         // rollout bus
         UniBus.get().register(this);
@@ -143,12 +139,16 @@ public class AStart extends Activity {
     }
 
     public void hitTarget() {
-        if (!done) done(System.currentTimeMillis()-startTime); done = true;
-        /*if (remaining == 1) {
+        mp.start();
+
+
+        if (remaining == 1 && !done) {
             done(System.currentTimeMillis() - startTime);
+            done = true;
+            return;
         }
         scoreTextView.setText(""+(--remaining));
-        newTarget();*/
+        newTarget();
     }
 
 
@@ -223,23 +223,24 @@ public class AStart extends Activity {
         int myScore = scoreFromString(myScoreStr);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String[] sc;
+        Log.i("Level",""+level);
         switch(level){
             case 1:
-                sc = prefs.getString(SharedPrefs.HS_EASY_1,"").split("|");
+                sc = prefs.getString(SharedPrefs.HS_EASY_1,"").split("\\|");
                 if (sc.length>1) {
                     String score = sc[1];
                     if (myScore < scoreFromString(score)) {
                         dialog(true, SharedPrefs.HS_EASY_1, SharedPrefs.HS_EASY_2, SharedPrefs.HS_EASY_3);
                         break;
                     } else {
-                        sc = prefs.getString(SharedPrefs.HS_EASY_2,"").split("|");
+                        sc = prefs.getString(SharedPrefs.HS_EASY_2,"").split("\\|");
                         if (sc.length>1) {
                             score = sc[1];
                             if (myScore<scoreFromString(score)) {
                                 dialog(true, SharedPrefs.HS_EASY_2, SharedPrefs.HS_EASY_3, trash);
                                 break;
                             } else {
-                                sc = prefs.getString(SharedPrefs.HS_EASY_3,"").split("|");
+                                sc = prefs.getString(SharedPrefs.HS_EASY_3,"").split("\\|");
                                 if (sc.length>1) {
                                     score = sc[1];
                                     if (myScore < scoreFromString(score)){
@@ -260,21 +261,21 @@ public class AStart extends Activity {
                     dialog(true, SharedPrefs.HS_EASY_1, trash, trash); break;
                 }
             case 2:
-                sc = prefs.getString(SharedPrefs.HS_MEDI_1,"").split("|");
+                sc = prefs.getString(SharedPrefs.HS_MEDI_1,"").split("\\|");
                 if (sc.length>1) {
                     String score = sc[1];
                     if (myScore < scoreFromString(score)) {
                         dialog(true, SharedPrefs.HS_MEDI_1, SharedPrefs.HS_MEDI_2, SharedPrefs.HS_MEDI_3);
                         break;
                     } else {
-                        sc = prefs.getString(SharedPrefs.HS_MEDI_2,"").split("|");
+                        sc = prefs.getString(SharedPrefs.HS_MEDI_2,"").split("\\|");
                         if (sc.length>1) {
                             score = sc[1];
                             if (myScore<scoreFromString(score)) {
                                 dialog(true, SharedPrefs.HS_MEDI_2, SharedPrefs.HS_MEDI_3, trash);
                                 break;
                             } else {
-                                sc = prefs.getString(SharedPrefs.HS_MEDI_3,"").split("|");
+                                sc = prefs.getString(SharedPrefs.HS_MEDI_3,"").split("\\|");
                                 if (sc.length>1) {
                                     score = sc[1];
                                     if (myScore < scoreFromString(score)){
@@ -295,21 +296,21 @@ public class AStart extends Activity {
                     dialog(true, SharedPrefs.HS_MEDI_1, trash, trash); break;
                 }
             case 3:
-                sc = prefs.getString(SharedPrefs.HS_HARD_1,"").split("|");
+                sc = prefs.getString(SharedPrefs.HS_HARD_1,"").split("\\|");
                 if (sc.length>1) {
                     String score = sc[1];
                     if (myScore < scoreFromString(score)) {
                         dialog(true, SharedPrefs.HS_HARD_1, SharedPrefs.HS_HARD_2, SharedPrefs.HS_HARD_3);
                         break;
                     } else {
-                        sc = prefs.getString(SharedPrefs.HS_HARD_2,"").split("|");
+                        sc = prefs.getString(SharedPrefs.HS_HARD_2,"").split("\\|");
                         if (sc.length>1) {
                             score = sc[1];
                             if (myScore<scoreFromString(score)) {
                                 dialog(true, SharedPrefs.HS_HARD_2, SharedPrefs.HS_HARD_3, trash);
                                 break;
                             } else {
-                                sc = prefs.getString(SharedPrefs.HS_HARD_3,"").split("|");
+                                sc = prefs.getString(SharedPrefs.HS_HARD_3,"").split("\\|");
                                 if (sc.length>1) {
                                     score = sc[1];
                                     if (myScore < scoreFromString(score)){
@@ -346,7 +347,11 @@ public class AStart extends Activity {
                         public void onClick(DialogInterface dialog, int id) {
                             String name = input.getText().toString();
                             String save = name+"|"+gamescore;
+                            Log.i("SaveString", save);
+                            Log.i("saved in", which+" " + ds1 + " " + ds2 + " ");
                             updatePrefs(save, which, ds1, ds2);
+                            Intent intent = new Intent(c, StartScreen.class);
+                            startActivity(intent);
                         }
                     });
 

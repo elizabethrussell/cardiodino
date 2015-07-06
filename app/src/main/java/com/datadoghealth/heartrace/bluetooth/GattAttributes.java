@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.datadoghealth.cardiodino.bluetooth;
+package com.datadoghealth.heartrace.bluetooth;
 
 import java.util.HashMap;
 

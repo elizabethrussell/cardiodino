@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.datadoghealth.cardiodino.bluetooth;
+package com.datadoghealth.heartrace.bluetooth;
 
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
@@ -26,28 +26,18 @@ import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
-import android.content.SharedPreferences;
-import android.media.MediaPlayer;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Binder;
 import android.os.IBinder;
-import android.os.Vibrator;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.datadoghealth.cardiodino.core.UniBus;
-import com.datadoghealth.cardiodino.util.HR;
-import com.datadoghealth.cardiodino.util.SharedPrefs;
+import com.datadoghealth.heartrace.core.UniBus;
+import com.datadoghealth.heartrace.util.HR;
 import com.squareup.otto.Subscribe;
 
 import java.util.List;
 import java.util.Timer;
-import java.util.TimerTask;
 import java.util.UUID;
 
 /**

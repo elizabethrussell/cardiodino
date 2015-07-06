@@ -1,13 +1,14 @@
-package com.datadoghealth.cardiodino;
+package com.datadoghealth.heartrace;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.datadoghealth.cardiodino.util.SharedPrefs;
+import com.datadoghealth.heartrace.util.SharedPrefs;
 
 /**
  * Created by Elizabeth on 7/3/2015.
@@ -87,9 +88,10 @@ public class HighScores extends Activity {
         if (s.isEmpty()) {
             ss = new String[] {"??","??:??"};
         } else {
-            ss = s.split("|");
+            ss = s.split("\\|");
         }
         String s2 = ss[1]+"        "+ss[0];
+        Log.i("StringSplitter", s+" " +ss[1]+ss[0]);
         return s2;
     }
 }

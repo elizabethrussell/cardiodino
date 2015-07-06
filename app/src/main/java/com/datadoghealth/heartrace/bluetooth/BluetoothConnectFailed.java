@@ -1,4 +1,4 @@
-package com.datadoghealth.cardiodino.bluetooth;
+package com.datadoghealth.heartrace.bluetooth;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -8,11 +8,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 
-import com.datadoghealth.cardiodino.R;
+import com.datadoghealth.heartrace.R;
 
 
 /**

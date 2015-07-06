@@ -1,13 +1,12 @@
-package com.datadoghealth.cardiodino.bluetooth;
+package com.datadoghealth.heartrace.bluetooth;
 
 import java.util.List;
 
-import com.datadoghealth.cardiodino.AStart;
-import com.datadoghealth.cardiodino.Levels;
-import com.datadoghealth.cardiodino.R;
-import com.datadoghealth.cardiodino.core.UniBus;
-import com.datadoghealth.cardiodino.util.HR;
-import com.datadoghealth.cardiodino.util.SharedPrefs;
+import com.datadoghealth.heartrace.Levels;
+import com.datadoghealth.heartrace.R;
+import com.datadoghealth.heartrace.core.UniBus;
+import com.datadoghealth.heartrace.util.HR;
+import com.datadoghealth.heartrace.util.SharedPrefs;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GridLabelRenderer;
 import com.jjoe64.graphview.series.DataPoint;
@@ -31,8 +30,6 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
-
-import static com.datadoghealth.cardiodino.core.UniBus.*;
 
 /**
  * For a given BLE device, this Activity provides the user interface to connect, display data,

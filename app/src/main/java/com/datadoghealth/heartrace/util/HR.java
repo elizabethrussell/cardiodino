@@ -1,4 +1,4 @@
-package com.datadoghealth.cardiodino.util;
+package com.datadoghealth.heartrace.util;
 
 /**
  * Created by elizabethrussell on 6/13/15.

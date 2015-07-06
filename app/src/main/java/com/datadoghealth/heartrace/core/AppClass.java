@@ -1,10 +1,12 @@
-package com.datadoghealth.cardiodino.core;
+package com.datadoghealth.heartrace.core;
 
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
 import java.util.Arrays;
 import java.util.List;
 
@@ -25,6 +27,7 @@ public class AppClass extends Application implements DaggerInjector {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
         //PreferenceManager.setDefaultValues(this, R.xml.settings, false);
         sp = PreferenceManager.getDefaultSharedPreferences(this);
         uid = ('h' + Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID));
