@@ -1,63 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.datadoghealth.heartrace" >
+    package="us.elizr.heartrace">
 
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-
-    <uses-feature
-        android:name="android.hardware.bluetooth_le"
-        android:required="true" />
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:name=".core.AppClass">
-
-        <activity android:name=".StartScreen"
-            android:label="HeartRace">
+        android:name=".core.MyApp">
+        <activity
+            android:name=".StartActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".bluetooth.BLEConnectingView" />
+        <activity android:name=".gameplay.GameplayView"/>
 
-        <activity android:name=".bluetooth.BluetoothScan"
-            android:label="CardioDino">
+        <service android:name=".bluetooth.BLEService"
+            android:enabled = "true"/>
 
-        </activity>
-
-        <activity android:name=".bluetooth.BluetoothAfterScan"
-            android:label="Connecting"></activity>
-
-        <activity android:name=".bluetooth.BluetoothConnectFailed"
-            android:label="Bad Connection"></activity>
-
-        <activity android:name=".AStart"
-            android:label="AStart"></activity>
-
-        <activity android:name=".Levels"
-            android:label="Levels"></activity>
-
-        <activity android:name=".Intro"
-            android:label="Intro"></activity>
-
-        <activity android:name=".HighScores"
-            android:label="HighScores"></activity>
-
-
-
-        <service
-            android:name=".bluetooth.BluetoothLeService"
-            android:enabled="true"/>
-
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="be702afb9306ac2b2c5f54d0247c4492bf736e13" />
     </application>
 
-
-    <uses-permission android:name="android.permission.INTERNET" />
 </manifest>

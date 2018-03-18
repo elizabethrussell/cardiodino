@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:background="@color/primary_color_heartrace"
     android:layout_height="match_parent">
 
@@ -14,8 +14,9 @@ android:layout_width="match_parent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="HEARTRACE"
-            android:id="@+id/home_title"
+            android:fontFamily="@font/sigmar_one"
+            android:text="@string/app_name"
+            android:id="@+id/text_home_title"
             android:textColor="@color/primary_text_heartrace"
             android:textSize="34sp"
             android:layout_marginBottom="34dp"/>
@@ -23,15 +24,15 @@ android:layout_width="match_parent"
         <com.jjoe64.graphview.GraphView
             android:layout_width="match_parent"
             android:layout_height="200dip"
-            android:id="@+id/home_plot"
+            android:id="@+id/graph_home_ecg"
             android:layout_marginBottom="12dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="PLAY"
-            android:id="@+id/home_play"
+            android:text="@string/play_button"
+            android:id="@+id/text_home_play"
             android:textColor="@color/primary_text_heartrace"
             android:layout_marginBottom="20dp"
             android:textSize="20sp"/>
@@ -40,8 +41,8 @@ android:layout_width="match_parent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="HIGH SCORES"
-            android:id="@+id/home_high_scores"
+            android:text="@string/high_score_button"
+            android:id="@+id/text_home_high_scores"
             android:textColor="@color/primary_text_heartrace"
             android:textSize="20sp"/>
     </LinearLayout>

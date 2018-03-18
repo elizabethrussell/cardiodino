@@ -1,8 +1,14 @@
 <resources>
-    <string name="app_name">CardioDino</string>
+    <string name="app_name">HeartRace</string>
 
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <!-- Home screen Strings-->
+    <string name="title_activity_start">StartActivity</string>
+    <string name="play_button">PLAY</string>
+    <string name="high_score_button">HIGH SCORE</string>
 
-
+    <!-- Bluetooth connection workflow -->
+    <string name="scanning_text">Scanning for heart rate monitor…</string>
+    <string name="select_device_text">Choose your weapon:</string>
+    <string name="bluetooth_device_description">%s %s</string>
+    <string name="bluetooth_device_selected">Beautiful choice!</string>
 </resources>
