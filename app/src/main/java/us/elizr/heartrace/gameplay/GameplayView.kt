@@ -53,9 +53,11 @@ class GameplayView: Activity(), GameplayViewInterface {
     }
 
     override fun updateBallPosition(hr: Int, reference: Int) {
-        text_gameplay_ball.text = hr.toString()
-        val coordinate = hrToYCoordinate(hr, reference)
-        text_gameplay_ball.animate().y(coordinate)
+        this@GameplayView.runOnUiThread {
+            text_gameplay_ball.text = hr.toString()
+            val coordinate = hrToYCoordinate(hr, reference)
+            text_gameplay_ball.animate().y(coordinate)
+        }
     }
 
     private fun hrToYCoordinate(hr: Int, reference: Int):Float {
@@ -72,20 +74,22 @@ class GameplayView: Activity(), GameplayViewInterface {
     }
 
     override fun updateTargetPosition(targetHr: Int, reference: Int) {
-        // update target view
-        view_gameplay_target.setLayoutParams(RelativeLayout.LayoutParams(screenWidth, 10))
-        val coordinate = targetToYCoordinate(targetHr, reference)
-        view_gameplay_target.y = coordinate
+        this@GameplayView.runOnUiThread {
+            // update target view
+            view_gameplay_target.setLayoutParams(RelativeLayout.LayoutParams(screenWidth, 10))
+            val coordinate = targetToYCoordinate(targetHr, reference)
+            view_gameplay_target.y = coordinate
 
-        // update target text
-        text_gameplay_target.text = targetHr.toString()
-        text_gameplay_target.y = coordinate - 100
+            // update target text
+            text_gameplay_target.text = targetHr.toString()
+            text_gameplay_target.y = coordinate - 100
+        }
     }
 
     private fun targetToYCoordinate(hr: Int, reference: Int):Float {
-        val m = (2 * VIEW_MARGIN - screenHeight) / (FUDGE_LIMIT * (1 + 1 / LOW_HANDICAP) + 2 * TOLERANCE)
-        val b = VIEW_MARGIN - m * (reference + FUDGE_LIMIT + TOLERANCE)
-        return (m * hr + b)
+            val m = (2 * VIEW_MARGIN - screenHeight) / (FUDGE_LIMIT * (1 + 1 / LOW_HANDICAP) + 2 * TOLERANCE)
+            val b = VIEW_MARGIN - m * (reference + FUDGE_LIMIT + TOLERANCE)
+            return (m * hr + b)
     }
 
 }

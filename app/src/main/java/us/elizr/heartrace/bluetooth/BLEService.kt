@@ -10,11 +10,13 @@ import android.os.Binder
 import android.os.Build
 import android.os.IBinder
 import android.support.v4.app.NotificationCompat
-import android.util.Log
 import us.elizr.heartrace.core.MyApp
 import java.util.*
 import javax.inject.Inject
 import android.bluetooth.BluetoothGattCharacteristic
+import android.bluetooth.BluetoothGattDescriptor
+
+
 
 
 
@@ -22,6 +24,9 @@ import android.bluetooth.BluetoothGattCharacteristic
  * Created by elizabethrussell on 3/16/18.
  */
 class BLEService : Service() {
+    @Inject
+    lateinit var hrModel: HeartRateModel
+
     private var bluetoothGatt: BluetoothGatt? = null
     private var device: BluetoothDevice? = null
 
@@ -56,7 +61,7 @@ class BLEService : Service() {
         }
 
     override fun onCreate() {
-
+        MyApp.appComponent.inject(this)
     }
 
     private val gattCallback = object : BluetoothGattCallback() {
@@ -88,11 +93,12 @@ class BLEService : Service() {
                                 if (charUuid == UUID_HR_MEASUREMENT) {
                                     val charaProp = gattCharacteristic.properties
                                     if ((charaProp or BluetoothGattCharacteristic.PROPERTY_READ)>0) {
-                                        bluetoothGatt?.setCharacteristicNotification(gattCharacteristic, true)
-                                        val descriptor = gattCharacteristic.getDescriptor(UUID_CLIENT_CHARACTERISTIC_CONFIG)
-                                        descriptor.value = BluetoothGattDescriptor.ENABLE_INDICATION_VALUE
-                                        bluetoothGatt?.writeDescriptor(descriptor)
-                                        bluetoothGatt?.readCharacteristic(gattCharacteristic)
+                                        if ((charaProp or BluetoothGattCharacteristic.PROPERTY_NOTIFY)>0) {
+                                            bluetoothGatt?.setCharacteristicNotification(gattCharacteristic, true)
+                                            val descriptor = gattCharacteristic.getDescriptor(UUID_CLIENT_CHARACTERISTIC_CONFIG)
+                                            descriptor.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
+                                            bluetoothGatt?.writeDescriptor(descriptor)
+                                        }
                                     }
                                 }
                             }
@@ -123,6 +129,7 @@ class BLEService : Service() {
         }
     }
 
+
     private fun handleHr(characteristic: BluetoothGattCharacteristic) {
         // parse
         val data = characteristic.value
@@ -135,8 +142,7 @@ class BLEService : Service() {
         }
         val hr = characteristic.getIntValue(format, 1)
 
-        // TODO: inform
-        Log.i("BLEService","Got heart rate "+hr)
+        hrModel.setHr(hr)
     }
 
     private val binder = BLEServiceBinder()
